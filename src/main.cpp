@@ -4,7 +4,7 @@
 #include "componentmanager.h"
 #include "systems.h"
 
-void setRandomRuler(EntityManager *entityManager, ComponentManager *componentManager, std::mt19937 rng, size_t i) {
+void setRandomRuler(EntityManager* entityManager, ComponentManager* componentManager, std::mt19937 rng, size_t i) {
     std::uniform_int_distribution<uint32_t> rulerDist(componentManager->getEntities<KingdomComponent>().size(),
                                                       ENTITY_SET.size());
 
@@ -19,7 +19,7 @@ void setRandomRuler(EntityManager *entityManager, ComponentManager *componentMan
 
 
 }
-void setKingdomRelationships(EntityManager *entityManager, ComponentManager *componentManager, std::mt19937 rng) {
+void setKingdomRelationships(EntityManager* entityManager, ComponentManager* componentManager, std::mt19937 rng) {
     std::uniform_int_distribution<int> relationshipDist(-10, 10);
 
     for (size_t i = 0; i < componentManager->getEntities<KingdomComponent>().size(); i++){
