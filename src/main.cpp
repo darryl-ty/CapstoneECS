@@ -44,7 +44,7 @@ void populateKingdoms(EntityManager* entityManager, ComponentManager* componentM
     std::uniform_int_distribution<int> techDist(1, 20);
     
     for (size_t i = 0; i < componentManager->getEntities<KingdomComponent>().size(); i++){
-        entityManager->getComponent<KingdomComponent>(i).aggressionLevel = static_cast<KingdomComponent::AggressionLevel>(aggroDist(rng));
+        entityManager->getComponent<KingdomComponent>(i).aggressionLevel = static_cast<KingdomComponent::KingdomNature>(aggroDist(rng));
         entityManager->getComponent<KingdomComponent>(i).kingdomName.append(KingdomNames::getRandomKingdomName());
         entityManager->getComponent<KingdomComponent>(i).kingdomStrength = strengthDist(rng);
         entityManager->getComponent<KingdomComponent>(i).kingdomTechLevel = techDist(rng);
@@ -116,7 +116,7 @@ void gameLoop() {
     worldSetup(&entityManager, &componentManager);
     START_YEAR = yearSetup();
 
-    KingdomSystem::establishKingdoms(&componentManager);
+    KingdomSystem::establishKingdoms(&entityManager, &componentManager);
 }
 
 int main() {
