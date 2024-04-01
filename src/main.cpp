@@ -116,7 +116,7 @@ void gameLoop() {
     worldSetup(&entityManager, &componentManager);
     START_YEAR = yearSetup();
 
-    KingdomSystem::establishKingdoms(&componentManager)
+    KingdomSystem::establishKingdoms(&componentManager);
 }
 
 int main() {
