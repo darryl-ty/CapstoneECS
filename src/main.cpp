@@ -1,9 +1,10 @@
 #include <iostream>
 #include <random>
-#include <math.h>
+#include <cmath>
 #include "entitymanager.h"
 #include "componentmanager.h"
 #include "systems.h"
+
 
 void setRandomRuler(EntityManager* entityManager, ComponentManager* componentManager, std::mt19937 rng, size_t i) {
     std::uniform_int_distribution<uint32_t> rulerDist(componentManager->getEntities<KingdomComponent>().size(),
@@ -100,13 +101,22 @@ void worldSetup(EntityManager* entityManager, ComponentManager* componentManager
     populateCharacters(entityManager, componentManager);
     populateKingdoms(entityManager, componentManager);
 }
+int yearSetup(){
+    std::random_device randomDevice;
+    std::mt19937 rng(randomDevice());
+
+    std::uniform_int_distribution<int> yearDist(0, 10000);
+
+    return yearDist(rng);
+}
 void gameLoop() {
     EntityManager entityManager;
     ComponentManager componentManager;
 
     worldSetup(&entityManager, &componentManager);
+    START_YEAR = yearSetup();
 
-
+    KingdomSystem::establishKingdoms(&componentManager)
 }
 
 int main() {
