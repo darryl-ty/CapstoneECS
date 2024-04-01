@@ -4,12 +4,17 @@
 #include "entitymanager.h"
 #include "componentmanager.h"
 
-extern int START_YEAR;
+static int START_YEAR;
 
 struct KingdomSystem{
-    static void establishKingdoms(ComponentManager* componentManager){
+    static void establishKingdoms(EntityManager* entityManager, ComponentManager* componentManager){
         for (auto& entity : componentManager->getEntities<KingdomComponent>()){
-           std::cout << "Year " << START_YEAR << ": The ";
+           std::cout << "Year " << START_YEAR << ": The "
+           << KingdomAdjectives::getAdjective(entityManager->getComponent<KingdomComponent>(entity).aggressionLevel)
+           << " " << entityManager->getComponent<KingdomComponent>(entity).kingdomName
+           << " was established. May the sovereign "
+           << entityManager->getComponent<CharacterComponent>(entityManager->getComponent<KingdomComponent>(entity).rulerID).name
+           << " reign supreme for eons!" << std::endl;
         }
     }
 };
