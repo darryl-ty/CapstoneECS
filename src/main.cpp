@@ -1,5 +1,6 @@
 #include <iostream>
 #include <random>
+#include <math.h>
 #include "entitymanager.h"
 #include "componentmanager.h"
 #include "systems.h"
@@ -76,8 +77,9 @@ void createCharacterEntities(EntityManager* entityManager, ComponentManager* com
 }
 void createKingdomEntities(EntityManager* entityManager, ComponentManager* componentManager){
     // This signifies the sqrt of the world size and I will take the
-    // floor of that value to determine how many kingdoms to generate.
-    int numOfKingdoms = 10;
+    // ceiling of that value to determine how many kingdoms to generate.
+    int kingdoms = 10;
+    int numOfKingdoms = ceil(kingdoms);
 
     auto itr = ENTITY_SET.begin();
     for (int i = 0; i < numOfKingdoms; i++){
@@ -103,6 +105,8 @@ void gameLoop() {
     ComponentManager componentManager;
 
     worldSetup(&entityManager, &componentManager);
+
+
 }
 
 int main() {
