@@ -6,14 +6,14 @@
 #include "entity.h"
 
 struct KingdomComponent{
-    enum AggressionLevel{
+    enum KingdomNature{
         Harmless = 0,
         Peaceful = 1,
         Neutral = 2,
         Opportunistic = 3,
         Evil = 4
     };
-    AggressionLevel aggressionLevel;
+    KingdomNature aggressionLevel;
     std::string kingdomName = "Kingdom of ";
     int kingdomStrength;
     int kingdomTechLevel;
@@ -48,6 +48,57 @@ struct KingdomNames{
 
     }
 };
+struct KingdomAdjectives{
+    static inline std::vector<std::string> harmlessAdj  {"Innocuous", "Benign", "Non-threatening", "Safe", "Inoffensive",
+                                                        "Unobjectionable", "Wholesome", "Mild", "Docile","Gentle",
+                                                        "Benevolent", "Tame", "Amiable", "Harmless"};
+    static inline std::vector<std::string> peacefulAdj  {"Serene", "Tranquil", "Calm", "Harmonious", "Placid", "Gentle",
+                                                        "Peaceful", "Quiet", "Soothing", "Relaxing", "Balanced",
+                                                        "Untroubled", "Tranquilizing", "Reassuring", "Idyllic"};
+    static inline std::vector<std::string> neutralAdj   {"Common", "Usual", "Typical", "Standard", "Ordinary",
+                                                       "Regular", "Average", "Routine", "Conventional", "Normal",
+                                                       "Traditional", "Typified", "Customary", "Everyday", "Familiar"};
+    static inline std::vector<std::string> opportuneAdj {"Exploitative", "Calculating", "Self-serving", "Opportune",
+                                                         "Strategic", "Ambitious", "Resourceful", "Advantageous",
+                                                         "Astute", "Shrewd", "Cunning", "Machiavellian", "Pragmatic",
+                                                         "Savvy", "Tactical"};
+    static inline std::vector<std::string> evilAdj      {"Sinister", "Malevolent", "Diabolical", "Malicious",
+                                                         "Wicked", "Vicious", "Depraved", "Cruel", "Nefarious",
+                                                         "Scheming", "Malignant", "Satanic", "Corrupt", "Vile",
+                                                         "Demonic"};
+
+    static std::string getAdjective(KingdomComponent::KingdomNature kingdomNature){
+        std::random_device randomDevice;
+        std::mt19937 rng(randomDevice());
+        std::string adj;
+
+        std::uniform_int_distribution<uint64_t> harmlessDist(0, harmlessAdj.size()-1);
+        std::uniform_int_distribution<uint64_t> peacefulDist(0, peacefulAdj.size()-1);
+        std::uniform_int_distribution<uint64_t> neutralDist(0, neutralAdj.size()-1);
+        std::uniform_int_distribution<uint64_t> opportuneDist(0, opportuneAdj.size()-1);
+        std::uniform_int_distribution<uint64_t> evilDist(0, evilAdj.size()-1);
+
+        switch (kingdomNature) {
+            case KingdomComponent::Harmless:
+                adj = harmlessAdj.at(harmlessDist(rng));
+                return adj;
+            case KingdomComponent::Peaceful:
+                adj = peacefulAdj.at(peacefulDist(rng));
+                return adj;
+            case KingdomComponent::Neutral:
+                adj = neutralAdj.at(neutralDist(rng));
+                return adj;
+            case KingdomComponent::Opportunistic:
+                adj = opportuneAdj.at(opportuneDist(rng));
+                return adj;
+            case KingdomComponent::Evil:
+                adj = evilAdj.at(evilDist(rng));
+                return adj;
+            default:
+                return "";
+        }
+    }
+};
 
 struct LocationComponent{
     int locationX;
@@ -78,7 +129,7 @@ struct CharacterComponent{
 };
 
 struct CharacterNames{
-    static inline std::vector<std::string> humanFirstNames{"Alexander", "Isabella", "William", "Sophia", "James", "Olivia", "John",
+    static inline std::vector<std::string> humanFirstNames{"Elana", "Alexander", "Isabella", "William", "Sophia", "James", "Olivia", "John",
                                              "Emma", "Michael", "Ava", "Christopher", "Mia", "Matthew", "Emily", "David",
                                              "Abigail", "Daniel", "Charlotte", "Andrew", "Harper", "Joseph", "Amelia",
                                              "Benjamin", "Evelyn", "Jacob", "Elizabeth", "Samuel", "Ella", "Nicholas",
