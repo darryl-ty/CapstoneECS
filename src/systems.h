@@ -16,11 +16,22 @@ struct KingdomSystem{
            << getKingdomRulerName(entityManager, entity) << " reign supreme for eons!" << std::endl;
         }
     }
+    static void kingdomProgress(EntityManager* entityManager, ComponentManager* componentManager){
+
+    }
 
 private:
     static std::string getKingdomRulerName(EntityManager* entityManager, ID entity){
         return entityManager->getComponent<CharacterComponent>(entityManager->getComponent<KingdomComponent>(entity).rulerID).name;
     }
+};
+
+struct CharacterSystem{
+
+};
+
+struct WarSystem{
+
 };
 
 #endif
