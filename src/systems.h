@@ -17,7 +17,9 @@ struct KingdomSystem{
         }
     }
     static void kingdomProgress(EntityManager* entityManager, ComponentManager* componentManager){
+        for (auto& entity : componentManager->getEntities<KingdomComponent>()){
 
+        }
     }
 
 private:
