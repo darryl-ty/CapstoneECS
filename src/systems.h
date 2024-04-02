@@ -1,6 +1,7 @@
 #pragma once
 #ifndef SYSTEMS_H
 #define SYSTEMS_H
+#include <sstream>
 #include "entitymanager.h"
 #include "componentmanager.h"
 
@@ -11,11 +12,14 @@ struct KingdomSystem{
         for (auto& entity : componentManager->getEntities<KingdomComponent>()){
            std::cout << "Year " << START_YEAR << ": The "
            << KingdomAdjectives::getAdjective(entityManager->getComponent<KingdomComponent>(entity).aggressionLevel)
-           << " " << entityManager->getComponent<KingdomComponent>(entity).kingdomName
-           << " was established. May the sovereign "
-           << entityManager->getComponent<CharacterComponent>(entityManager->getComponent<KingdomComponent>(entity).rulerID).name
-           << " reign supreme for eons!" << std::endl;
+           << " " << entityManager->getComponent<KingdomComponent>(entity).kingdomName<< " was established. May the sovereign "
+           << getKingdomRulerName(entityManager, entity) << " reign supreme for eons!" << std::endl;
         }
+    }
+
+private:
+    static std::string getKingdomRulerName(EntityManager* entityManager, ID entity){
+        return entityManager->getComponent<CharacterComponent>(entityManager->getComponent<KingdomComponent>(entity).rulerID).name;
     }
 };
 
