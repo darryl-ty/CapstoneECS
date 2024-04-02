@@ -49,23 +49,22 @@ struct KingdomNames{
     }
 };
 struct KingdomAdjectives{
-    static inline std::vector<std::string> harmlessAdj  {"Innocuous", "Benign", "Non-threatening", "Safe", "Inoffensive",
-                                                        "Unobjectionable", "Wholesome", "Mild", "Docile","Gentle",
-                                                        "Benevolent", "Tame", "Amiable", "Harmless"};
-    static inline std::vector<std::string> peacefulAdj  {"Serene", "Tranquil", "Calm", "Harmonious", "Placid", "Gentle",
-                                                        "Peaceful", "Quiet", "Soothing", "Relaxing", "Balanced",
-                                                        "Untroubled", "Tranquilizing", "Reassuring", "Idyllic"};
-    static inline std::vector<std::string> neutralAdj   {"Common", "Usual", "Typical", "Standard", "Ordinary",
-                                                       "Regular", "Average", "Routine", "Conventional", "Normal",
-                                                       "Traditional", "Typified", "Customary", "Everyday", "Familiar"};
-    static inline std::vector<std::string> opportuneAdj {"Exploitative", "Calculating", "Self-serving", "Opportune",
-                                                         "Strategic", "Ambitious", "Resourceful", "Advantageous",
-                                                         "Astute", "Shrewd", "Cunning", "Machiavellian", "Pragmatic",
-                                                         "Savvy", "Tactical"};
-    static inline std::vector<std::string> evilAdj      {"Sinister", "Malevolent", "Diabolical", "Malicious",
-                                                         "Wicked", "Vicious", "Depraved", "Cruel", "Nefarious",
-                                                         "Scheming", "Malignant", "Satanic", "Corrupt", "Vile",
-                                                         "Demonic"};
+    static inline std::vector<std::string> harmlessAdj  {"innocuous", "benign", "non-threatening", "safe", "inoffensive",
+                                                        "unobjectionable", "wholesome", "mild", "docile","gentle",
+                                                        "benevolent", "tame", "amiable", "harmless"};
+    static inline std::vector<std::string> peacefulAdj  {"serene", "tranquil", "calm", "harmonious", "placid", "gentle",
+                                                        "peaceful", "quiet", "soothing", "relaxing", "balanced",
+                                                        "untroubled", "tranquilizing", "reassuring", "idyllic"};
+    static inline std::vector<std::string> neutralAdj   {"common", "usual", "typical", "standard", "ordinary",
+                                                       "regular", "average", "routine", "conventional", "normal",
+                                                       "traditional", "typified", "customary", "everyday", "familiar"};
+    static inline std::vector<std::string> opportuneAdj {"exploitative", "calculating", "self-serving", "opportune",
+                                                         "strategic", "ambitious", "resourceful", "advantageous",
+                                                         "astute", "shrewd", "cunning", "machiavellian", "pragmatic",
+                                                         "savvy", "tactical"};
+    static inline std::vector<std::string> evilAdj      {"sinister", "malevolent", "diabolical", "malicious",
+                                                         "wicked", "vicious", "depraved", "cruel", "nefarious",
+                                                         "scheming", "malignant", "corrupt", "vile"};
 
     static std::string getAdjective(KingdomComponent::KingdomNature kingdomNature){
         std::random_device randomDevice;
