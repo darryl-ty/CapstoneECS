@@ -2,10 +2,12 @@
 #ifndef SYSTEMS_H
 #define SYSTEMS_H
 #include <sstream>
+#include <mutex>
 #include "entitymanager.h"
 #include "componentmanager.h"
 
 static int START_YEAR;
+std::mutex FILE_MUTEX;
 
 struct KingdomSystem{
     static void establishKingdoms(EntityManager* entityManager, ComponentManager* componentManager){
@@ -18,6 +20,7 @@ struct KingdomSystem{
     }
     static void kingdomProgress(EntityManager* entityManager, ComponentManager* componentManager){
         for (auto& entity : componentManager->getEntities<KingdomComponent>()){
+            std::lock_guard<std::mutex> lock(FILE_MUTEX);
 
         }
     }
