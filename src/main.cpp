@@ -113,10 +113,14 @@ void gameLoop() {
     EntityManager entityManager;
     ComponentManager componentManager;
 
-    worldSetup(&entityManager, &componentManager);
     START_YEAR = yearSetup();
+    worldSetup(&entityManager, &componentManager);
 
     KingdomSystem::establishKingdoms(&entityManager, &componentManager);
+
+    for(int i = START_YEAR+1; i < START_YEAR+100; i++){
+        std::cout << "Year " << i << std::endl;
+    }
 }
 
 int main() {
