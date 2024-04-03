@@ -9,6 +9,7 @@
 #include "componentmanager.h"
 
 static int START_YEAR;
+static int YEAR;
 std::mutex FILE_MUTEX;
 
 struct KingdomSystem{
@@ -27,40 +28,47 @@ struct KingdomSystem{
         
         std::uniform_int_distribution<int> researchDist(-10, 10);
         for (auto& entity : componentManager->getEntities<KingdomComponent>()){
-            int researchChange = researchDist(rng);
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
             std::lock_guard<std::mutex> lock(FILE_MUTEX);
-            oss << "Year " << START_YEAR << ": ";
+            int researchChange = researchDist(rng);
+
+            oss << "Year " << YEAR << ": ";
             if (entityManager->getComponent<WarComponent>(entity).defender == entity || entityManager->getComponent<WarComponent>(entity).initiator == entity){
-                oss << "The " << getKingdomAdjective(entityManager, entity) << getKingdomName(entityManager, entity)
-                << " has too busy " << ((entityManager->getComponent<WarComponent>(entity).defender == entity)
+                oss << "The " << getKingdomAdjective(entityManager, entity) << " " << getKingdomName(entityManager, entity)
+                << " was too busy " << ((entityManager->getComponent<WarComponent>(entity).defender == entity)
                 ? "defending their realm to make any significant research progress this year."
                 : "attacking realms to make any significant research progress this year.") << std::endl;
+                std::cout << oss.str();
 
                 continue;
             }
 
             if (researchChange <= -5) {
-                oss << "The " << getKingdomAdjective(entityManager, entity) << getKingdomName(entityManager, entity)
+                oss << "The " << getKingdomAdjective(entityManager, entity) << " " << getKingdomName(entityManager, entity)
                 << " research initiatives have proven fruitless, leading to the demise of valuable findings. "
                    "They must now reassess their approach and strive to prevent similar losses in the future." << std::endl;
+                std::cout << oss.str();
 
                 entityManager->getComponent<KingdomComponent>(entity).kingdomTechLevel-=10;
                 entityManager->getComponent<KingdomComponent>(entity).kingdomStrength-=10;
             } else if (researchChange <= 0){
-                oss << "The " << getKingdomAdjective(entityManager, entity) << getKingdomName(entityManager, entity)
+                oss << "The " << getKingdomAdjective(entityManager, entity) << " " << getKingdomName(entityManager, entity)
                     << " research endeavors have yielded no tangible progress, leaving its knowledge base stagnant. "
                        "It's imperative for them to recalibrate their strategies and embark on a more fruitful path forward." << std::endl;
+                std::cout << oss.str();
 
             } else if (researchChange <= 8){
-                oss << "The " << getKingdomAdjective(entityManager, entity) << getKingdomName(entityManager, entity)
+                oss << "The " << getKingdomAdjective(entityManager, entity) << " " << getKingdomName(entityManager, entity)
                     << " made considerable progress in their research efforts this year. With optimism and dedication, "
                        "they look forward to leveraging these accomplishments as a springboard for even greater achievements ahead." << std::endl;
+                std::cout << oss.str();
 
                 entityManager->getComponent<KingdomComponent>(entity).kingdomTechLevel+=2;
             } else{
-                oss << "The " << getKingdomAdjective(entityManager, entity) << getKingdomName(entityManager, entity)
+                oss << "The " << getKingdomAdjective(entityManager, entity) << " " << getKingdomName(entityManager, entity)
                     << " announces a monumental breakthrough in research, particularly in areas with direct military implications. "
                        "This remarkable advancement underscores their commitment to innovation and reinforces their strategic prowess in safeguarding our realm." << std::endl;
+                std::cout << oss.str();
 
                 entityManager->getComponent<KingdomComponent>(entity).kingdomTechLevel+=10;
                 entityManager->getComponent<KingdomComponent>(entity).kingdomStrength+=10;
@@ -85,10 +93,12 @@ struct CharacterSystem{
     static void characterActions(EntityManager* entityManager, ComponentManager* componentManager){
         std::ostringstream oss;
         for (auto& entity : componentManager->getEntities<CharacterComponent>()){
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
             std::lock_guard<std::mutex> lock(FILE_MUTEX);
-            oss << "Year " << START_YEAR << ": ";
+            oss << "Year " << YEAR << ": ";
 
             oss << entityManager->getComponent<CharacterComponent>(entity).name << " is happy to be alive!" << std::endl;
+            std::cout << oss.str();
         }
     }
 
