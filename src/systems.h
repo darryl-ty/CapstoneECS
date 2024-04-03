@@ -67,7 +67,7 @@ struct KingdomSystem{
             } else{
                 oss << "The " << getKingdomAdjective(entityManager, entity) << " " << getKingdomName(entityManager, entity)
                     << " announces a monumental breakthrough in research, particularly in areas with direct military implications. "
-                       "This remarkable advancement underscores their commitment to innovation and reinforces their strategic prowess in safeguarding our realm." << std::endl;
+                       "This remarkable advancement underscores their commitment to innovation and reinforces their strategic prowess in safeguarding their realm." << std::endl;
                 std::cout << oss.str();
 
                 entityManager->getComponent<KingdomComponent>(entity).kingdomTechLevel+=10;
