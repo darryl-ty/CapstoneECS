@@ -109,8 +109,8 @@ struct RulerComponent{
 };
 
 struct WarComponent{
-    ID initiator;
-    ID defender;
+    ID initiator=-1;
+    ID defender=-1;
 };
 
 struct CharacterComponent{
