@@ -30,6 +30,15 @@ struct KingdomSystem{
             int researchChange = researchDist(rng);
             std::lock_guard<std::mutex> lock(FILE_MUTEX);
             oss << "Year: " << START_YEAR;
+            if (entityManager->getComponent<WarComponent>(entity).defender == entity || entityManager->getComponent<WarComponent>(entity).initiator == entity){
+                oss << "The " << getKingdomAdjective(entityManager, entity) << getKingdomName(entityManager, entity)
+                << " has too busy " << ((entityManager->getComponent<WarComponent>(entity).defender == entity)
+                ? "defending their realm to make any significant research progress this year."
+                : "attacking realms to make any significant research progress this year.") << std::endl;
+
+                continue;
+            }
+
             if (researchChange <= -5) {
                 oss << "The " << getKingdomAdjective(entityManager, entity) << getKingdomName(entityManager, entity)
                 << " research initiatives have proven fruitless, leading to the demise of valuable findings. "
