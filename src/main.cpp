@@ -1,8 +1,5 @@
-#include <iostream>
 #include <random>
 #include <cmath>
-#include <fstream>
-#include <sstream>
 #include <thread>
 #include "entitymanager.h"
 #include "componentmanager.h"
@@ -113,12 +110,14 @@ int yearSetup(){
     return yearDist(rng);
 }
 void simulateWorldYear(EntityManager* entityManager, ComponentManager* componentManager){
-    std::ostringstream oss;
     std::ofstream worldHistoryFile{"history.txt"}; // TODO: Change this to incorporate world name into history file name.
 
-    std::thread thread1([entityManager, componentManager] { return KingdomSystem::kingdomProgress(entityManager, componentManager); });
+    std::thread thread1([entityManager, componentManager] { return KingdomSystem::kingdomProgress(entityManager, componentManager);});
+    std::thread thread2([entityManager, componentManager] { return CharacterSystem::characterActions(entityManager, componentManager);});
+
 
     thread1.join();
+    thread2.join();
 }
 void gameLoop() {
     EntityManager entityManager;
@@ -129,7 +128,7 @@ void gameLoop() {
 
     KingdomSystem::establishKingdoms(&entityManager, &componentManager);
 
-    for(int i = START_YEAR+1; i < START_YEAR+100; i++){
+    for(YEAR = START_YEAR+1; YEAR < START_YEAR+10; YEAR++){
         simulateWorldYear(&entityManager, &componentManager);
     }
 }
