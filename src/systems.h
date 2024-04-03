@@ -29,7 +29,7 @@ struct KingdomSystem{
         for (auto& entity : componentManager->getEntities<KingdomComponent>()){
             int researchChange = researchDist(rng);
             std::lock_guard<std::mutex> lock(FILE_MUTEX);
-            oss << "Year: " << START_YEAR;
+            oss << "Year " << START_YEAR << ": ";
             if (entityManager->getComponent<WarComponent>(entity).defender == entity || entityManager->getComponent<WarComponent>(entity).initiator == entity){
                 oss << "The " << getKingdomAdjective(entityManager, entity) << getKingdomName(entityManager, entity)
                 << " has too busy " << ((entityManager->getComponent<WarComponent>(entity).defender == entity)
@@ -86,6 +86,9 @@ struct CharacterSystem{
         std::ostringstream oss;
         for (auto& entity : componentManager->getEntities<CharacterComponent>()){
             std::lock_guard<std::mutex> lock(FILE_MUTEX);
+            oss << "Year " << START_YEAR << ": ";
+
+            oss << entityManager->getComponent<CharacterComponent>(entity).name << " is happy to be alive!" << std::endl;
         }
     }
 
