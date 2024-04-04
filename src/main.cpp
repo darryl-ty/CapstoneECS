@@ -90,7 +90,7 @@ void createKingdomEntities(EntityManager* entityManager, ComponentManager* compo
         itr++;
     }
 }
-void nameWorld(){
+void nameWorld(){ // TODO: FIGURE THIS OUT
     std::random_device device;
     std::mt19937 rng(device());
     std::vector<std::string> worldNames{"Eldoria", "Avaloria", "Arcadia", "Lumina", "Celestria", "Mythoria", "Drakoria",
@@ -100,9 +100,10 @@ void nameWorld(){
                              "Crystalis"};
     std::uniform_int_distribution<uint64_t> worldNameDist(0, worldNames.size()-1);
     auto worldName = worldNameDist(rng);
-    std::filesystem::path worldPath{"/worlds/" + worldNames.at(worldName) + "/" + worldNames.at(worldName) + ".txt"};
+//    std::filesystem::path worldPath{"C:\\Users\\Darryl Jr\\CLionProjects\\ECSExplorations\\src\\worlds\\" + worldNames.at(worldName) + "\\" + worldNames.at(worldName) + ".txt"};
+//    std::filesystem::create_directory(worldPath);
 
-    worldHistoryFile = worldPath;
+    worldHistoryFile = static_cast<std::basic_ofstream<char>>(worldNames.at(worldName) + ".txt");
 
     if (!worldHistoryFile.is_open())
         std::cerr << "Error: Could not open world history file. Data may be lost." << std::endl;

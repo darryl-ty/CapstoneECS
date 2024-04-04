@@ -10,7 +10,7 @@
 
 static int START_YEAR;
 static int YEAR;
-std::ofstream worldHistoryFile;
+static std::ofstream worldHistoryFile;
 std::mutex FILE_MUTEX;
 
 struct KingdomSystem{
@@ -20,6 +20,10 @@ struct KingdomSystem{
            << getKingdomAdjective(entityManager, entity) << " "
            << getKingdomName(entityManager, entity) << " was established. May the sovereign "
            << getKingdomRulerName(entityManager, entity) << " reign supreme for eons!" << std::endl;
+            worldHistoryFile << "Year " << START_YEAR << ": The "
+                             << getKingdomAdjective(entityManager, entity) << " "
+                             << getKingdomName(entityManager, entity) << " was established. May the sovereign "
+                             << getKingdomRulerName(entityManager, entity) << " reign supreme for eons!" << std::endl;
         }
     }
     static void kingdomProgress(EntityManager* entityManager, ComponentManager* componentManager){
@@ -40,6 +44,7 @@ struct KingdomSystem{
                 ? "defending their realm to make any significant research progress this year."
                 : "attacking realms to make any significant research progress this year.") << std::endl;
                 std::cout << oss.str();
+                worldHistoryFile << oss.str() << std::endl;
 
                 continue;
             }
@@ -49,6 +54,7 @@ struct KingdomSystem{
                 << " research initiatives have proven fruitless, leading to the demise of valuable findings. "
                    "They must now reassess their approach and strive to prevent similar losses in the future." << std::endl;
                 std::cout << oss.str();
+                worldHistoryFile << oss.str() << std::endl;
 
                 entityManager->getComponent<KingdomComponent>(entity).kingdomTechLevel-=10;
                 entityManager->getComponent<KingdomComponent>(entity).kingdomStrength-=10;
@@ -57,12 +63,14 @@ struct KingdomSystem{
                     << " research endeavors have yielded no tangible progress, leaving its knowledge base stagnant. "
                        "It's imperative for them to recalibrate their strategies and embark on a more fruitful path forward." << std::endl;
                 std::cout << oss.str();
+                worldHistoryFile << oss.str() << std::endl;
 
             } else if (researchChange < 9){
                 oss << "The " << getKingdomAdjective(entityManager, entity) << " " << getKingdomName(entityManager, entity)
                     << " made considerable progress in their research efforts this year. With optimism and dedication, "
                        "they look forward to leveraging these accomplishments as a springboard for even greater achievements ahead." << std::endl;
                 std::cout << oss.str();
+                worldHistoryFile << oss.str() << std::endl;
 
                 entityManager->getComponent<KingdomComponent>(entity).kingdomTechLevel+=2;
             } else{
@@ -70,6 +78,7 @@ struct KingdomSystem{
                     << " announces a monumental breakthrough in research, particularly in areas with direct military implications. "
                        "This remarkable advancement underscores their commitment to innovation and reinforces their strategic prowess in safeguarding their realm." << std::endl;
                 std::cout << oss.str();
+                worldHistoryFile << oss.str() << std::endl;
 
                 entityManager->getComponent<KingdomComponent>(entity).kingdomTechLevel+=10;
                 entityManager->getComponent<KingdomComponent>(entity).kingdomStrength+=10;
