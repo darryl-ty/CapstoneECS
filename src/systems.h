@@ -76,6 +76,11 @@ struct KingdomSystem{
 
         }
     }
+    static void kingdomDiplomacy(EntityManager* entityManager, ComponentManager* componentManager){
+        for (auto& entity : componentManager->getEntities<KingdomComponent>()){
+
+        }
+    }
 
 private:
     static std::string getKingdomRulerName(EntityManager* entityManager, ID entity){
@@ -113,6 +118,16 @@ private:
                 return "dwarf";
             case CharacterComponent::GOBLIN:
                 return "goblin";
+            default:
+                return "";
+        }
+    }
+    static std::string getCharacterGender(ID entity){
+        switch (entity % 2) {
+            case 0:
+                return "female";
+            case 1:
+                return "male";
             default:
                 return "";
         }
