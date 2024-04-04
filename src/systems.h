@@ -22,12 +22,12 @@ struct KingdomSystem{
         }
     }
     static void kingdomProgress(EntityManager* entityManager, ComponentManager* componentManager){
-        std::ostringstream oss;
         std::random_device device;
         std::mt19937 rng(device());
         
         std::uniform_int_distribution<int> researchDist(-10, 10);
         for (auto& entity : componentManager->getEntities<KingdomComponent>()){
+            std::ostringstream oss;
             std::this_thread::sleep_for(std::chrono::milliseconds(500));
             std::lock_guard<std::mutex> lock(FILE_MUTEX);
             int researchChange = researchDist(rng);
@@ -43,7 +43,7 @@ struct KingdomSystem{
                 continue;
             }
 
-            if (researchChange <= -5) {
+            if (researchChange < -5) {
                 oss << "The " << getKingdomAdjective(entityManager, entity) << " " << getKingdomName(entityManager, entity)
                 << " research initiatives have proven fruitless, leading to the demise of valuable findings. "
                    "They must now reassess their approach and strive to prevent similar losses in the future." << std::endl;
@@ -51,13 +51,13 @@ struct KingdomSystem{
 
                 entityManager->getComponent<KingdomComponent>(entity).kingdomTechLevel-=10;
                 entityManager->getComponent<KingdomComponent>(entity).kingdomStrength-=10;
-            } else if (researchChange <= 0){
+            } else if (researchChange < 0){
                 oss << "The " << getKingdomAdjective(entityManager, entity) << " " << getKingdomName(entityManager, entity)
                     << " research endeavors have yielded no tangible progress, leaving its knowledge base stagnant. "
                        "It's imperative for them to recalibrate their strategies and embark on a more fruitful path forward." << std::endl;
                 std::cout << oss.str();
 
-            } else if (researchChange <= 8){
+            } else if (researchChange < 9){
                 oss << "The " << getKingdomAdjective(entityManager, entity) << " " << getKingdomName(entityManager, entity)
                     << " made considerable progress in their research efforts this year. With optimism and dedication, "
                        "they look forward to leveraging these accomplishments as a springboard for even greater achievements ahead." << std::endl;
