@@ -1,6 +1,7 @@
 #include <random>
 #include <cmath>
 #include <thread>
+#include <filesystem>
 #include "entitymanager.h"
 #include "componentmanager.h"
 #include "systems.h"
@@ -89,6 +90,24 @@ void createKingdomEntities(EntityManager* entityManager, ComponentManager* compo
         itr++;
     }
 }
+void nameWorld(){
+    std::random_device device;
+    std::mt19937 rng(device());
+    std::vector<std::string> worldNames{"Eldoria", "Avaloria", "Arcadia", "Lumina", "Celestria", "Mythoria", "Drakoria",
+                             "Sylvanoria", "Valoria", "Eldoria", "Azurea", "Solstice", "Evercrest", "Emberlyn",
+                             "Frostfall", "Shadowmere", "Verdantia", "Elysium", "Astravia", "Runevale", "Emberwind",
+                             "Celestium", "Seraphia", "Eldergrove", "Stormhold", "Wyldewood", "Thunderspire", "Arcanum",
+                             "Crystalis"};
+    std::uniform_int_distribution<uint64_t> worldNameDist(0, worldNames.size()-1);
+    auto worldName = worldNameDist(rng);
+    std::filesystem::path worldPath{"/worlds/" + worldNames.at(worldName) + "/" + worldNames.at(worldName) + ".txt"};
+
+    worldHistoryFile = worldPath;
+
+    if (!worldHistoryFile.is_open())
+        std::cerr << "Error: Could not open world history file. Data may be lost." << std::endl;
+
+}
 void populateEntitySet(){
     for (int i = 0; i < MAX_POSSIBLE_ENTITIES; i++){
         Entity entity;
@@ -96,6 +115,7 @@ void populateEntitySet(){
 }
 void worldSetup(EntityManager* entityManager, ComponentManager* componentManager) {
     populateEntitySet();
+    nameWorld();
     createKingdomEntities(entityManager, componentManager);
     createCharacterEntities(entityManager, componentManager);
     populateCharacters(entityManager, componentManager);
@@ -110,14 +130,12 @@ int yearSetup(){
     return yearDist(rng);
 }
 void simulateWorldYear(EntityManager* entityManager, ComponentManager* componentManager){
-    std::ofstream worldHistoryFile{"history.txt"}; // TODO: Change this to incorporate world name into history file name.
-
     std::thread thread1([entityManager, componentManager] { return KingdomSystem::kingdomProgress(entityManager, componentManager);});
-    std::thread thread2([entityManager, componentManager] { return CharacterSystem::characterActions(entityManager, componentManager);});
+//    std::thread thread2([entityManager, componentManager] { return CharacterSystem::characterActions(entityManager, componentManager);});
 
 
     thread1.join();
-    thread2.join();
+//    thread2.join();
 }
 void gameLoop() {
     EntityManager entityManager;
@@ -131,6 +149,7 @@ void gameLoop() {
     for(YEAR = START_YEAR+1; YEAR < START_YEAR+10; YEAR++){
         simulateWorldYear(&entityManager, &componentManager);
     }
+    worldHistoryFile.close();
 }
 
 int main() {
