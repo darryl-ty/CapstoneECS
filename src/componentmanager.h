@@ -27,6 +27,11 @@ public:
     }
 
     template<class T>
+    void removeEntity(ID entity){
+        entities<T>().erase(entity);
+    }
+
+    template<class T>
     [[nodiscard]]
     const std::set<ID>& getEntities() const {
         return entities<T>();

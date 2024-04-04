@@ -23,6 +23,11 @@ public:
     }
 
     template<class T>
+    void removeComponent(ID entity, T component){
+        components<T>().erase(entity);
+    }
+
+    template<class T>
     T& getComponent(ID entity){
         return components<T>()[entity];
     }
