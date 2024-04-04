@@ -10,6 +10,7 @@
 
 static int START_YEAR;
 static int YEAR;
+std::ofstream worldHistoryFile;
 std::mutex FILE_MUTEX;
 
 struct KingdomSystem{
