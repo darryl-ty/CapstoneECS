@@ -103,6 +103,20 @@ struct CharacterSystem{
     }
 
 private:
+    static std::string getCharacterRace(EntityManager* entityManager, ID entity){
+        switch (entityManager->getComponent<CharacterComponent>(entity).race) {
+            case CharacterComponent::HUMAN:
+                return "human";
+            case CharacterComponent::ELF:
+                return "elf";
+            case CharacterComponent::DWARF:
+                return "dwarf";
+            case CharacterComponent::GOBLIN:
+                return "goblin";
+            default:
+                return "";
+        }
+    }
 
 };
 
