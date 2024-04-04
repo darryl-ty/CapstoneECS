@@ -87,7 +87,19 @@ struct KingdomSystem{
         }
     }
     static void kingdomDiplomacy(EntityManager* entityManager, ComponentManager* componentManager){
+        std::random_device device;
+        std::mt19937 rng(device());
+        std::uniform_int_distribution<uint> diploDist(1, 4);
         for (auto& entity : componentManager->getEntities<KingdomComponent>()){
+            std::ostringstream oss;
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+            std::lock_guard<std::mutex> lock(FILE_MUTEX);
+            auto diploInteractionChance = diploDist(rng);
+            if (diploInteractionChance > 1)
+                continue;
+            else {
+
+            }
 
         }
     }
