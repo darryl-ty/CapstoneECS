@@ -90,16 +90,17 @@ struct KingdomSystem{
         std::random_device device;
         std::mt19937 rng(device());
         std::uniform_int_distribution<uint> diploDist(1, 4);
+        std::uniform_int_distribution<uint> kingdomDist(0, componentManager->getEntities<KingdomComponent>().size()-1);
         for (auto& entity : componentManager->getEntities<KingdomComponent>()){
             std::ostringstream oss;
             std::this_thread::sleep_for(std::chrono::milliseconds(500));
             std::lock_guard<std::mutex> lock(FILE_MUTEX);
             auto diploInteractionChance = diploDist(rng);
-            if (diploInteractionChance > 1)
+            auto kingdom = kingdomDist(rng);
+            if (diploInteractionChance > 1 || entity == kingdom)
                 continue;
-            else {
+            entityManager->getComponent<KingdomComponent>(entity).kingdomRelationships.at(kingdom);
 
-            }
 
         }
     }
