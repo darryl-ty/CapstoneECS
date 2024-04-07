@@ -99,7 +99,7 @@ struct KingdomSystem{
             auto kingdom = kingdomDist(rng);
             if (diploInteractionChance > 1 || entity == kingdom)
                 continue;
-            entityManager->getComponent<KingdomComponent>(entity).kingdomRelationships.at(kingdom);
+             = entityManager->getComponent<KingdomComponent>(entity).kingdomRelationships.at(kingdom);
 
 
         }
