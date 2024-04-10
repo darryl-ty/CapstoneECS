@@ -99,11 +99,10 @@ struct KingdomSystem{
             auto kingdom = kingdomDist(rng);
 
             oss << "Year " << YEAR << ": ";
-            if (diploInteractionChance > 1 || entity == kingdom)
+            if (diploInteractionChance > 1 || entity == kingdom
+            || entityManager->getComponent<WarComponent>(entity).defender == entity
+            || entityManager->getComponent<WarComponent>(entity).initiator == entity)
                 continue;
-            if (entityManager->getComponent<WarComponent>(entity).defender == entity || entityManager->getComponent<WarComponent>(entity).initiator == entity){
-                continue;
-            }
             if (entityManager->getComponent<KingdomComponent>(entity).kingdomRelationships.at(kingdom) < 0){
                 switch (diploInteractionChance % 2) {
                     case 0: // Friendly Interaction/repair relations
@@ -126,17 +125,45 @@ struct KingdomSystem{
                         std::cout << oss.str();
                         worldHistoryFile << oss.str() << std::endl;
 
-                        entityManager->getComponent<KingdomComponent>(entity).kingdomRelationships.at(kingdom) = 10;
-                        entityManager->getComponent<KingdomComponent>(kingdom).kingdomRelationships.at(entity) = 10;
+                        entityManager->getComponent<KingdomComponent>(entity).kingdomRelationships.at(kingdom) = -10;
+                        entityManager->getComponent<KingdomComponent>(kingdom).kingdomRelationships.at(entity) = -10;
+
+                        entityManager->addComponent(entity, WarComponent{entity,kingdom});
+                        entityManager->addComponent(kingdom, WarComponent{entity,kingdom});
+                        componentManager->addEntity<WarComponent>(entity);
+                        componentManager->addEntity<WarComponent>(kingdom);
+
                         break;
                 }
             } else {
                 switch (diploInteractionChance % 3) {
                     case 0:
+                        oss << "The " << getKingdomAdjective(entityManager, entity) << " "
+                            << getKingdomName(entityManager, entity) << " has sent a delegation to the capital of the "
+                            << getKingdomName(entityManager, kingdom) << ". It seems they are trying to promote "
+                                                                         "better relations between the two civilizations." << std::endl;
+                        std::cout << oss.str();
+                        worldHistoryFile << oss.str() << std::endl;
+
+
                         break;
                     case 1:
+                        oss << "The " << getKingdomAdjective(entityManager, entity) << " "
+                            << getKingdomName(entityManager, entity) << " has sent a delegation to the capital of the "
+                            << getKingdomName(entityManager, kingdom) << ". It seems they are trying to promote "
+                                                                         "better relations between the two civilizations." << std::endl;
+                        std::cout << oss.str();
+                        worldHistoryFile << oss.str() << std::endl;
+
                         break;
                     case 2:
+                        oss << "The " << getKingdomAdjective(entityManager, entity) << " "
+                            << getKingdomName(entityManager, entity) << " has sent a delegation to the capital of the "
+                            << getKingdomName(entityManager, kingdom) << ". It seems they are trying to promote "
+                                                                         "better relations between the two civilizations." << std::endl;
+                        std::cout << oss.str();
+                        worldHistoryFile << oss.str() << std::endl;
+
                         break;
                 }
 
