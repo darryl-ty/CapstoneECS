@@ -89,17 +89,58 @@ struct KingdomSystem{
     static void kingdomDiplomacy(EntityManager* entityManager, ComponentManager* componentManager){
         std::random_device device;
         std::mt19937 rng(device());
-        std::uniform_int_distribution<uint> diploDist(1, 4);
-        std::uniform_int_distribution<uint> kingdomDist(0, componentManager->getEntities<KingdomComponent>().size()-1);
+        std::uniform_int_distribution<uint32_t> diploDist(1, 4);
+        std::uniform_int_distribution<uint32_t> kingdomDist(0, componentManager->getEntities<KingdomComponent>().size()-1);
         for (auto& entity : componentManager->getEntities<KingdomComponent>()){
             std::ostringstream oss;
             std::this_thread::sleep_for(std::chrono::milliseconds(500));
             std::lock_guard<std::mutex> lock(FILE_MUTEX);
             auto diploInteractionChance = diploDist(rng);
             auto kingdom = kingdomDist(rng);
+
+            oss << "Year " << YEAR << ": ";
             if (diploInteractionChance > 1 || entity == kingdom)
                 continue;
-             = entityManager->getComponent<KingdomComponent>(entity).kingdomRelationships.at(kingdom);
+            if (entityManager->getComponent<WarComponent>(entity).defender == entity || entityManager->getComponent<WarComponent>(entity).initiator == entity){
+                continue;
+            }
+            if (entityManager->getComponent<KingdomComponent>(entity).kingdomRelationships.at(kingdom) < 0){
+                switch (diploInteractionChance % 2) {
+                    case 0: // Friendly Interaction/repair relations
+                        oss << "The " << getKingdomAdjective(entityManager, entity) << " "
+                        << getKingdomName(entityManager, entity) << " has sent a delegation to the capital of the "
+                        << getKingdomName(entityManager, kingdom) << ". It seems they are trying to promote "
+                                                                     "better relations between the two civilizations." << std::endl;
+                        std::cout << oss.str();
+                        worldHistoryFile << oss.str() << std::endl;
+
+                        entityManager->getComponent<KingdomComponent>(entity).kingdomRelationships.at(kingdom) += 2;
+                        entityManager->getComponent<KingdomComponent>(kingdom).kingdomRelationships.at(entity) +=2;
+                        break;
+                    case 1: // War
+                        oss << "War has broken out between the " << getKingdomAdjective(entityManager, entity) << " "
+                        << getKingdomName(entityManager, entity) << " and the "
+                        << getKingdomAdjective(entityManager, kingdom) << " "
+                        << getKingdomName(entityManager, kingdom) << ". Let the drums of war sound!" << std::endl;
+
+                        std::cout << oss.str();
+                        worldHistoryFile << oss.str() << std::endl;
+
+                        entityManager->getComponent<KingdomComponent>(entity).kingdomRelationships.at(kingdom) = 10;
+                        entityManager->getComponent<KingdomComponent>(kingdom).kingdomRelationships.at(entity) = 10;
+                        break;
+                }
+            } else {
+                switch (diploInteractionChance % 3) {
+                    case 0:
+                        break;
+                    case 1:
+                        break;
+                    case 2:
+                        break;
+                }
+
+            }
 
 
         }
