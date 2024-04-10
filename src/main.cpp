@@ -103,7 +103,7 @@ void nameWorld(){ // TODO: FIGURE THIS OUT
 //    std::filesystem::path worldPath{"C:\\Users\\Darryl Jr\\CLionProjects\\ECSExplorations\\src\\worlds\\" + worldNames.at(worldName) + "\\" + worldNames.at(worldName) + ".txt"};
 //    std::filesystem::create_directory(worldPath);
 
-    worldHistoryFile = static_cast<std::basic_ofstream<char>>(worldNames.at(worldName) + "WorldHistory" + (char)START_YEAR + ".txt");
+    worldHistoryFile = static_cast<std::basic_ofstream<char>>(worldNames.at(worldName) + "WorldHistory" + std::to_string(START_YEAR) + ".txt");
 
     if (!worldHistoryFile.is_open())
         std::cerr << "Error: Could not open world history file. Data may be lost." << std::endl;
@@ -131,11 +131,13 @@ int yearSetup(){
     return yearDist(rng);
 }
 void simulateWorldYear(EntityManager* entityManager, ComponentManager* componentManager){
-    std::thread kingdomThread([entityManager, componentManager] { return KingdomSystem::kingdomProgress(entityManager, componentManager);});
+    std::thread kingdomProgThread([entityManager, componentManager] { return KingdomSystem::kingdomProgress(entityManager, componentManager);});
+    std::thread kingdomDiploThread([entityManager, componentManager] { return KingdomSystem::kingdomDiplomacy(entityManager, componentManager);});
 //    std::thread characterThread([entityManager, componentManager] { return CharacterSystem::characterActions(entityManager, componentManager);});
 
 
-    kingdomThread.join();
+    kingdomProgThread.join();
+    kingdomDiploThread.join();
 //    characterThread.join();
 }
 void gameLoop() {

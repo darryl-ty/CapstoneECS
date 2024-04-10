@@ -113,8 +113,8 @@ struct KingdomSystem{
                         std::cout << oss.str();
                         worldHistoryFile << oss.str() << std::endl;
 
-                        entityManager->getComponent<KingdomComponent>(entity).kingdomRelationships.at(kingdom) += 2;
-                        entityManager->getComponent<KingdomComponent>(kingdom).kingdomRelationships.at(entity) +=2;
+                        entityManager->getComponent<KingdomComponent>(entity).kingdomRelationships.at(kingdom) += 1;
+                        entityManager->getComponent<KingdomComponent>(kingdom).kingdomRelationships.at(entity) +=1;
                         break;
                     case 1: // War
                         oss << "War has broken out between the " << getKingdomAdjective(entityManager, entity) << " "
@@ -139,31 +139,38 @@ struct KingdomSystem{
                 switch (diploInteractionChance % 3) {
                     case 0:
                         oss << "The " << getKingdomAdjective(entityManager, entity) << " "
-                            << getKingdomName(entityManager, entity) << " has sent a delegation to the capital of the "
-                            << getKingdomName(entityManager, kingdom) << ". It seems they are trying to promote "
-                                                                         "better relations between the two civilizations." << std::endl;
+                            << getKingdomName(entityManager, entity) << " pigeon-mailed a friendly letter to sovereign "
+                            << getKingdomRulerName(entityManager, kingdom) << " of "
+                            << getKingdomName(entityManager, kingdom) << "." << std::endl;
                         std::cout << oss.str();
                         worldHistoryFile << oss.str() << std::endl;
 
-
+                        entityManager->getComponent<KingdomComponent>(entity).kingdomRelationships.at(kingdom) += 3;
+                        entityManager->getComponent<KingdomComponent>(kingdom).kingdomRelationships.at(entity) +=3;
                         break;
                     case 1:
-                        oss << "The " << getKingdomAdjective(entityManager, entity) << " "
-                            << getKingdomName(entityManager, entity) << " has sent a delegation to the capital of the "
-                            << getKingdomName(entityManager, kingdom) << ". It seems they are trying to promote "
-                                                                         "better relations between the two civilizations." << std::endl;
+                        oss << "The sovereign " << getKingdomRulerName(entityManager, entity) << " of "
+                            << getKingdomName(entityManager, entity) << " is hosting a party for the citizens of the "
+                            << getKingdomName(entityManager, kingdom) << ". This will be a great chance for the two "
+                            "civilizations and their people to get to known one another." << std::endl;
                         std::cout << oss.str();
                         worldHistoryFile << oss.str() << std::endl;
 
+                        entityManager->getComponent<KingdomComponent>(entity).kingdomRelationships.at(kingdom) += 5;
+                        entityManager->getComponent<KingdomComponent>(kingdom).kingdomRelationships.at(entity) +=5;
                         break;
                     case 2:
                         oss << "The " << getKingdomAdjective(entityManager, entity) << " "
-                            << getKingdomName(entityManager, entity) << " has sent a delegation to the capital of the "
-                            << getKingdomName(entityManager, kingdom) << ". It seems they are trying to promote "
-                                                                         "better relations between the two civilizations." << std::endl;
+                            << getKingdomName(entityManager, entity) << " cemented an alliance with the "
+                            << getKingdomName(entityManager, kingdom) << " between the sovereigns  "
+                            << getKingdomRulerName(entityManager, entity) << " and "
+                            << getKingdomRulerName(entityManager, kingdom)
+                            << " may they rule better together and til death do they part!" << std::endl;
                         std::cout << oss.str();
                         worldHistoryFile << oss.str() << std::endl;
 
+                        entityManager->getComponent<KingdomComponent>(entity).kingdomRelationships.at(kingdom) += 10;
+                        entityManager->getComponent<KingdomComponent>(kingdom).kingdomRelationships.at(entity) +=10;
                         break;
                 }
 
