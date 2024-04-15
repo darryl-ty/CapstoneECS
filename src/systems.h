@@ -234,6 +234,11 @@ private:
 };
 
 struct WarSystem{
+    static void simulateWar(EntityManager* entityManager, ComponentManager* componentManager){
+        for(auto& entity : componentManager->getEntities<WarComponent>()){
+
+        }
+    }
 
 };
 
