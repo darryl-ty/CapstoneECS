@@ -133,11 +133,13 @@ int yearSetup(){
 void simulateWorldYear(EntityManager* entityManager, ComponentManager* componentManager){
     std::thread kingdomProgThread([entityManager, componentManager] { return KingdomSystem::kingdomProgress(entityManager, componentManager);});
     std::thread kingdomDiploThread([entityManager, componentManager] { return KingdomSystem::kingdomDiplomacy(entityManager, componentManager);});
+//    std::thread warThread([entityManager, componentManager] { return WarSystem::simulateWar(entityManager, componentManager);});
 //    std::thread characterThread([entityManager, componentManager] { return CharacterSystem::characterActions(entityManager, componentManager);});
 
 
     kingdomProgThread.join();
     kingdomDiploThread.join();
+//    warThread.join();
 //    characterThread.join();
 }
 void gameLoop() {
