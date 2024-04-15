@@ -5,6 +5,7 @@
 #include <fstream>
 #include <mutex>
 #include <random>
+#include <cmath>
 #include "entitymanager.h"
 #include "componentmanager.h"
 
@@ -236,7 +237,12 @@ private:
 struct WarSystem{
     static void simulateWar(EntityManager* entityManager, ComponentManager* componentManager){
         for(auto& entity : componentManager->getEntities<WarComponent>()){
+            std::ostringstream oss;
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+            std::lock_guard<std::mutex> lock(FILE_MUTEX);
 
+            int attackerStr = ceil(entityManager->getComponent<KingdomComponent>(entityManager->getComponent<WarComponent>(entity).initiator).kingdomStrength + (entityManager->getComponent<KingdomComponent>(entityManager->getComponent<WarComponent>(entity).initiator).kingdomStrength * 0.2));
+            int defenderStr = ceil(entityManager->getComponent<KingdomComponent>(entityManager->getComponent<WarComponent>(entity).defender).kingdomStrength + (entityManager->getComponent<KingdomComponent>(entityManager->getComponent<WarComponent>(entity).defender).kingdomStrength * 0.2));
         }
     }
 
