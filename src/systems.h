@@ -241,10 +241,17 @@ struct WarSystem{
             std::this_thread::sleep_for(std::chrono::milliseconds(500));
             std::lock_guard<std::mutex> lock(FILE_MUTEX);
 
-            int attackerStr = ceil(entityManager->getComponent<KingdomComponent>(entityManager->getComponent<WarComponent>(entity).initiator).kingdomStrength + (entityManager->getComponent<KingdomComponent>(entityManager->getComponent<WarComponent>(entity).initiator).kingdomStrength * 0.2));
-            int defenderStr = ceil(entityManager->getComponent<KingdomComponent>(entityManager->getComponent<WarComponent>(entity).defender).kingdomStrength + (entityManager->getComponent<KingdomComponent>(entityManager->getComponent<WarComponent>(entity).defender).kingdomStrength * 0.2));
+            int attackerStr = getAttackerStr(entityManager, entity);
+            int defenderStr = getDefenderStr(entityManager, entity);
+
         }
     }
+
+private:
+    static int getAttackerStr(EntityManager *entityManager,
+                              const unsigned int &entity) { return ceil(entityManager->getComponent<KingdomComponent>(entityManager->getComponent<WarComponent>(entity).initiator).kingdomStrength + (entityManager->getComponent<KingdomComponent>(entityManager->getComponent<WarComponent>(entity).initiator).kingdomStrength * 0.2)); }
+    static int getDefenderStr(EntityManager *entityManager,
+                              const unsigned int &entity) { return ceil(entityManager->getComponent<KingdomComponent>(entityManager->getComponent<WarComponent>(entity).defender).kingdomStrength + (entityManager->getComponent<KingdomComponent>(entityManager->getComponent<WarComponent>(entity).defender).kingdomStrength * 0.2)); }
 
 };
 
