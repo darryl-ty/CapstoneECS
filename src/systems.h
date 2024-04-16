@@ -244,14 +244,22 @@ struct WarSystem{
             int attackerStr = getAttackerStr(entityManager, entity);
             int defenderStr = getDefenderStr(entityManager, entity);
 
+            entityManager->getComponent<KingdomComponent>(entityManager->getComponent<WarComponent>(entity).defender).kingdomStrength -= attackerStr;
+            if (defenderStr < 0){
+                continue;
+            } else {
+
+            }
         }
     }
 
 private:
-    static int getAttackerStr(EntityManager *entityManager,
-                              const unsigned int &entity) { return ceil(entityManager->getComponent<KingdomComponent>(entityManager->getComponent<WarComponent>(entity).initiator).kingdomStrength + (entityManager->getComponent<KingdomComponent>(entityManager->getComponent<WarComponent>(entity).initiator).kingdomStrength * 0.2)); }
-    static int getDefenderStr(EntityManager *entityManager,
-                              const unsigned int &entity) { return ceil(entityManager->getComponent<KingdomComponent>(entityManager->getComponent<WarComponent>(entity).defender).kingdomStrength + (entityManager->getComponent<KingdomComponent>(entityManager->getComponent<WarComponent>(entity).defender).kingdomStrength * 0.2)); }
+    static int getAttackerStr(EntityManager *entityManager, const unsigned int &entity){
+        return ceil(entityManager->getComponent<KingdomComponent>(entityManager->getComponent<WarComponent>(entity).initiator).kingdomStrength + (entityManager->getComponent<KingdomComponent>(entityManager->getComponent<WarComponent>(entity).initiator).kingdomTechLevel * 0.2));
+    }
+    static int getDefenderStr(EntityManager *entityManager, const unsigned int &entity){
+        return ceil(entityManager->getComponent<KingdomComponent>(entityManager->getComponent<WarComponent>(entity).defender).kingdomStrength + (entityManager->getComponent<KingdomComponent>(entityManager->getComponent<WarComponent>(entity).defender).kingdomTechLevel * 0.2));
+    }
 
 };
 
