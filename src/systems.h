@@ -39,16 +39,18 @@ struct KingdomSystem{
             int researchChange = researchDist(rng);
 
             oss << "Year " << YEAR << ": ";
-            if (entityManager->getComponent<WarComponent>(entity).defender == entity || entityManager->getComponent<WarComponent>(entity).initiator == entity){
-                oss << "The " << getKingdomAdjective(entityManager, entity) << " " << getKingdomName(entityManager, entity)
-                << " was too busy " << ((entityManager->getComponent<WarComponent>(entity).defender == entity)
-                ? "defending their realm to make any significant research progress this year."
-                : "attacking realms to make any significant research progress this year.") << std::endl;
-                std::cout << oss.str();
-                worldHistoryFile << oss.str() << std::endl;
+            if (entityManager->getComponent<WarComponent>(entity).defender == entity || entityManager->getComponent<WarComponent>(entity).initiator == entity) {
+                    oss << "The " << getKingdomAdjective(entityManager, entity) << " "
+                        << getKingdomName(entityManager, entity)
+                        << " was too busy " << ((entityManager->getComponent<WarComponent>(entity).defender == entity)
+                                                ? "defending their realm to make any significant research progress this year."
+                                                : "attacking realms to make any significant research progress this year.")
+                        << std::endl;
+                    std::cout << oss.str();
+                    worldHistoryFile << oss.str() << std::endl;
 
-                continue;
-            }
+                    continue;
+                }
 
             if (researchChange < -5) {
                 oss << "The " << getKingdomAdjective(entityManager, entity) << " " << getKingdomName(entityManager, entity)
@@ -153,7 +155,7 @@ struct KingdomSystem{
                         oss << "The sovereign " << getKingdomRulerName(entityManager, entity) << " of "
                             << getKingdomName(entityManager, entity) << " is hosting a party for the citizens of the "
                             << getKingdomName(entityManager, kingdom) << ". This will be a great chance for the two "
-                            "civilizations and their people to get to known one another." << std::endl;
+                            "civilizations and their people to get to know one another." << std::endl;
                         std::cout << oss.str();
                         worldHistoryFile << oss.str() << std::endl;
 
@@ -195,18 +197,77 @@ private:
 
 struct CharacterSystem{
     static void characterActions(EntityManager* entityManager, ComponentManager* componentManager){
-        std::ostringstream oss;
+        std::random_device device;
+        std::mt19937 rng(device());
+        std::uniform_int_distribution<uint32_t> actionDist(1, 10);
         for (auto& entity : componentManager->getEntities<CharacterComponent>()){
+            std::ostringstream oss;
             std::this_thread::sleep_for(std::chrono::milliseconds(500));
             std::lock_guard<std::mutex> lock(FILE_MUTEX);
-            oss << "Year " << YEAR << ": ";
 
-            oss << entityManager->getComponent<CharacterComponent>(entity).name << " is happy to be alive!" << std::endl;
-            std::cout << oss.str();
+            oss << "Year " << YEAR << ": ";
+            switch (actionDist(rng)) {
+                case 1:
+                    oss << "The " << getCharacterGender(entity) << " " << getCharacterRace(entityManager, entity)
+                    << " " << getCharacterName(entityManager, entity) << std::endl;
+                    std::cout << oss.str();
+                    worldHistoryFile << oss.str() << std::endl;
+                    break;
+                case 2:
+                    std::cout << "The character sharpens their sword." << std::endl;
+                    std::cout << oss.str();
+                    worldHistoryFile << oss.str() << std::endl;
+                    break;
+                case 3:
+                    std::cout << "The character brews a powerful potion." << std::endl;
+                    std::cout << oss.str();
+                    worldHistoryFile << oss.str() << std::endl;
+                    break;
+                case 4:
+                    std::cout << "The character reads an ancient manuscript." << std::endl;
+                    std::cout << oss.str();
+                    worldHistoryFile << oss.str() << std::endl;
+                    break;
+                case 5:
+                    std::cout << "The character scouts ahead for danger." << std::endl;
+                    std::cout << oss.str();
+                    worldHistoryFile << oss.str() << std::endl;
+                    break;
+                case 6:
+                    std::cout << "The character finds a legendary weapon!" << std::endl;
+                    std::cout << oss.str();
+                    worldHistoryFile << oss.str() << std::endl;
+                    break;
+                case 7:
+                    std::cout << "The character sets up camp for the night." << std::endl;
+                    std::cout << oss.str();
+                    worldHistoryFile << oss.str() << std::endl;
+                    break;
+                case 8:
+                    std::cout << "The character trains with a master warrior." << std::endl;
+                    std::cout << oss.str();
+                    worldHistoryFile << oss.str() << std::endl;
+                    break;
+                case 9:
+                    std::cout << "The character negotiates with a local merchant." << std::endl;
+                    std::cout << oss.str();
+                    worldHistoryFile << oss.str() << std::endl;
+                    break;
+                case 10:
+                    std::cout << "The character heals an injured ally." << std::endl;
+                    std::cout << oss.str();
+                    worldHistoryFile << oss.str() << std::endl;
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
 private:
+    static std::string getCharacterName(EntityManager* entityManager, ID entity){
+        return entityManager->getComponent<CharacterComponent>(entity).name;
+    }
     static std::string getCharacterRace(EntityManager* entityManager, ID entity){
         switch (entityManager->getComponent<CharacterComponent>(entity).race) {
             case CharacterComponent::HUMAN:
@@ -236,30 +297,87 @@ private:
 
 struct WarSystem{
     static void simulateWar(EntityManager* entityManager, ComponentManager* componentManager){
-        for(auto& entity : componentManager->getEntities<WarComponent>()){
+        for(auto& warID : componentManager->getEntities<WarComponent>()){
+            if (warID %2 == 0)
+                continue;
             std::ostringstream oss;
             std::this_thread::sleep_for(std::chrono::milliseconds(500));
             std::lock_guard<std::mutex> lock(FILE_MUTEX);
 
-            int attackerStr = getAttackerStr(entityManager, entity);
-            int defenderStr = getDefenderStr(entityManager, entity);
-
-            entityManager->getComponent<KingdomComponent>(entityManager->getComponent<WarComponent>(entity).defender).kingdomStrength -= attackerStr;
-            if (defenderStr < 0){
+            int attackerStr = getAttackerStr(entityManager, warID);
+            int *attackerHealth = getAttackerHealth(entityManager, warID);
+            int defenderStr = getDefenderStr(entityManager, warID);
+            int *defenderHealth = getDefenderHealth(entityManager, warID);
+            if(getAttackerName(entityManager, warID).size() < 12 || getDefenderName(entityManager, warID).size() < 12)
                 continue;
-            } else {
 
+            *defenderHealth -= attackerStr;
+
+            oss << "Year " << YEAR << ": ";
+            if (*defenderHealth <= 0){
+                oss << "The " << getDefenderName(entityManager, warID) << " was overrun by the "
+                << getAttackerName(entityManager, warID) << "! May God protect their people!" << std::endl;
+
+                killDefender(entityManager, componentManager, warID);
+                endWar(entityManager, componentManager, warID);
+
+                std::cout << oss.str();
+                worldHistoryFile << oss.str() << std::endl;
+                continue;
             }
+
+            *attackerHealth -= defenderStr;
+
+            if (*attackerHealth <= 0){
+                oss << "The " << getDefenderName(entityManager, warID) << " masterfully defended their realm from the "
+                << getAttackerName(entityManager, warID) << "! Peace has once again been established!" << std::endl;
+
+                endWar(entityManager, componentManager, warID);
+
+                std::cout << oss.str();
+                worldHistoryFile << oss.str() << std::endl;
+                continue;
+            }
+
+            oss << "Both the " << getAttackerName(entityManager, warID) << " and the "
+            << getDefenderName(entityManager, warID) << " have been engaged in a bloody war with each other this year. "
+                                                        "Only time will tell who prevails!" << std::endl;
+            std::cout << oss.str();
+            worldHistoryFile << oss.str() << std::endl;
         }
     }
-
 private:
-    static int getAttackerStr(EntityManager *entityManager, const unsigned int &entity){
-        return ceil(entityManager->getComponent<KingdomComponent>(entityManager->getComponent<WarComponent>(entity).initiator).kingdomStrength + (entityManager->getComponent<KingdomComponent>(entityManager->getComponent<WarComponent>(entity).initiator).kingdomTechLevel * 0.2));
+    static int getAttackerStr(EntityManager *entityManager, const unsigned int &warID){
+        return ceil(entityManager->getComponent<KingdomComponent>(entityManager->getComponent<WarComponent>(warID).initiator).kingdomStrength + (entityManager->getComponent<KingdomComponent>(entityManager->getComponent<WarComponent>(warID).initiator).kingdomTechLevel * 0.2));
     }
-    static int getDefenderStr(EntityManager *entityManager, const unsigned int &entity){
-        return ceil(entityManager->getComponent<KingdomComponent>(entityManager->getComponent<WarComponent>(entity).defender).kingdomStrength + (entityManager->getComponent<KingdomComponent>(entityManager->getComponent<WarComponent>(entity).defender).kingdomTechLevel * 0.2));
+    static int getDefenderStr(EntityManager *entityManager, const unsigned int &warID){
+        return ceil(entityManager->getComponent<KingdomComponent>(entityManager->getComponent<WarComponent>(warID).defender).kingdomStrength + (entityManager->getComponent<KingdomComponent>(entityManager->getComponent<WarComponent>(warID).defender).kingdomTechLevel * 0.2));
     }
+    static int* getAttackerHealth(EntityManager *entityManager, const unsigned int &warID){
+        return &entityManager->getComponent<KingdomComponent>(entityManager->getComponent<WarComponent>(warID).initiator).kingdomStrength;
+    }
+    static int* getDefenderHealth(EntityManager *entityManager, const unsigned int &warID){
+        return &entityManager->getComponent<KingdomComponent>(entityManager->getComponent<WarComponent>(warID).defender).kingdomStrength;
+    }
+    static std::string getAttackerName(EntityManager *entityManager, ID warID){
+        return entityManager->getComponent<KingdomComponent>(entityManager->getComponent<WarComponent>(warID).initiator).kingdomName;
+    }
+    static std::string getDefenderName(EntityManager *entityManager, ID warID){
+        return entityManager->getComponent<KingdomComponent>(entityManager->getComponent<WarComponent>(warID).defender).kingdomName;
+    }
+    static void killDefender(EntityManager *entityManager, ComponentManager *componentManager, ID warID){
+        componentManager->removeEntity<KingdomComponent>(entityManager->getComponent<WarComponent>(warID).defender);
+        entityManager->removeComponent(entityManager->getComponent<WarComponent>(warID).defender, WarComponent{});
+        entityManager->removeComponent(entityManager->getComponent<WarComponent>(warID).initiator, WarComponent{});
+    }
+    static void endWar(EntityManager *entityManager, ComponentManager *componentManager, ID warID){
+        entityManager->removeComponent(entityManager->getComponent<WarComponent>(warID).initiator, WarComponent{entityManager->getComponent<WarComponent>(warID).initiator,entityManager->getComponent<WarComponent>(warID).defender});
+        entityManager->removeComponent(entityManager->getComponent<WarComponent>(warID).defender, WarComponent{entityManager->getComponent<WarComponent>(warID).initiator,entityManager->getComponent<WarComponent>(warID).defender});
+        componentManager->removeEntity<WarComponent>(entityManager->getComponent<WarComponent>(warID).initiator);
+        componentManager->removeEntity<WarComponent>(entityManager->getComponent<WarComponent>(warID).defender);
+
+    }
+
 
 };
 
