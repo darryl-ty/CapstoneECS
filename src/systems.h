@@ -205,58 +205,100 @@ struct CharacterSystem{
             std::this_thread::sleep_for(std::chrono::milliseconds(500));
             std::lock_guard<std::mutex> lock(FILE_MUTEX);
 
+            if (!entityManager->getComponent<CharacterComponent>(entity).isAlive)
+                continue;
+
             oss << "Year " << YEAR << ": ";
+            if (entityManager->getComponent<CharacterComponent>(entity).name == "Elana"){
+                oss << "Elana took some time to stop and smell the roses." << std::endl;
+                std::cout << oss.str();
+                worldHistoryFile << oss.str() << std::endl;
+                continue;
+            }
             switch (actionDist(rng)) {
                 case 1:
                     oss << "The " << getCharacterGender(entity) << " " << getCharacterRace(entityManager, entity)
-                    << " " << getCharacterName(entityManager, entity) << std::endl;
+                    << " " << getCharacterName(entityManager, entity) << " trained in the hinterlands developing"
+                    << (getCharacterGender(entity) == "male" ? " his" : " her") << " skills!" << std::endl;
                     std::cout << oss.str();
                     worldHistoryFile << oss.str() << std::endl;
+
+                    entityManager->getComponent<CharacterComponent>(entity).damage += 5;
+
                     break;
                 case 2:
-                    std::cout << "The character sharpens their sword." << std::endl;
+                    oss << getCharacterName(entityManager, entity) << ", the " << getCharacterGender(entity) << " "
+                    << getCharacterRace(entityManager, entity) << " spent their time improving their looks." << std::endl;
                     std::cout << oss.str();
                     worldHistoryFile << oss.str() << std::endl;
+
+                    entityManager->getComponent<CharacterComponent>(entity).health += 1;
+
                     break;
                 case 3:
-                    std::cout << "The character brews a powerful potion." << std::endl;
+                    oss << getCharacterName(entityManager, entity) << ", the " << getCharacterGender(entity) << " "
+                        << getCharacterRace(entityManager, entity) << " got lost in the wilds." << std::endl;
                     std::cout << oss.str();
                     worldHistoryFile << oss.str() << std::endl;
                     break;
                 case 4:
-                    std::cout << "The character reads an ancient manuscript." << std::endl;
+                    oss << "Death claimed the " << getCharacterRace(entityManager, entity) << " "
+                        << getCharacterName(entityManager, entity) << ". " << (getCharacterGender(entity) == "male" ? " He" : " She")
+                        << " will be missed dearly..." << std::endl;
                     std::cout << oss.str();
                     worldHistoryFile << oss.str() << std::endl;
+
+                    entityManager->getComponent<CharacterComponent>(entity).isAlive = false;
+
                     break;
                 case 5:
-                    std::cout << "The character scouts ahead for danger." << std::endl;
+                    oss << "The " << getCharacterGender(entity) << " " << getCharacterRace(entityManager, entity)
+                        << " " << getCharacterName(entityManager, entity) << " decided to join a cult." << std::endl;
                     std::cout << oss.str();
                     worldHistoryFile << oss.str() << std::endl;
                     break;
                 case 6:
-                    std::cout << "The character finds a legendary weapon!" << std::endl;
+                    oss << getCharacterName(entityManager, entity) << ", the " << getCharacterGender(entity) << " "
+                        << getCharacterRace(entityManager, entity) << " became the blade-keeper of an ancient weapon!"
+                        << (getCharacterGender(entity) == "male" ? " He" : " She") << " will defend it with their life!" << std::endl;
                     std::cout << oss.str();
                     worldHistoryFile << oss.str() << std::endl;
+
+                    entityManager->getComponent<CharacterComponent>(entity).damage += 100;
+
                     break;
                 case 7:
-                    std::cout << "The character sets up camp for the night." << std::endl;
+                    oss << getCharacterName(entityManager, entity) << ", the " << getCharacterRace(entityManager, entity)
+                    << " lost their leg in a arm-wrestling competition. Let's hope they dont fall for that again." << std::endl;
                     std::cout << oss.str();
                     worldHistoryFile << oss.str() << std::endl;
+
+                    entityManager->getComponent<CharacterComponent>(entity).health -= 5;
+
                     break;
                 case 8:
-                    std::cout << "The character trains with a master warrior." << std::endl;
+                    oss << "The " << getCharacterGender(entity) << " " << getCharacterRace(entityManager, entity)
+                        << " " << getCharacterName(entityManager, entity) << " pondered the meaning of life." << std::endl;
                     std::cout << oss.str();
                     worldHistoryFile << oss.str() << std::endl;
                     break;
                 case 9:
-                    std::cout << "The character negotiates with a local merchant." << std::endl;
+                    oss << "The " << getCharacterGender(entity) << " " << getCharacterRace(entityManager, entity)
+                        << " " << getCharacterName(entityManager, entity) << " got into an altercation with "
+                        << (entityManager->getComponent<CharacterComponent>(entity-1).isAlive
+                        ? getCharacterName(entityManager, entity-1)
+                        : " their spouse") << "."  << std::endl;
                     std::cout << oss.str();
                     worldHistoryFile << oss.str() << std::endl;
                     break;
                 case 10:
-                    std::cout << "The character heals an injured ally." << std::endl;
+                    oss << getCharacterName(entityManager, entity) << ", the " << getCharacterGender(entity) << " "
+                        << getCharacterRace(entityManager, entity) << " discovered the secrets of life and death." << std::endl;
                     std::cout << oss.str();
                     worldHistoryFile << oss.str() << std::endl;
+
+                    entityManager->getComponent<CharacterComponent>(entity).health += 5000;
+
                     break;
                 default:
                     break;
