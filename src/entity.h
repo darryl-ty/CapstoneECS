@@ -7,7 +7,7 @@
 #include <set>
 
 using ID = uint32_t;
-static const uint32_t MAX_POSSIBLE_ENTITIES = 100;
+static const uint32_t MAX_POSSIBLE_ENTITIES = 50;
 static std::set<ID> ENTITY_SET;
 
 class Entity{
