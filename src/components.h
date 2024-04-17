@@ -128,12 +128,10 @@ struct CharacterComponent{
 };
 
 struct CharacterNames{
-    static inline std::vector<std::string> humanFirstNames{"Elana", "Alexander", "Isabella", "William", "Sophia", "James", "Olivia", "John",
-                                             "Emma", "Michael", "Ava", "Christopher", "Mia", "Matthew", "Emily", "David",
-                                             "Abigail", "Daniel", "Charlotte", "Andrew", "Harper", "Joseph", "Amelia",
-                                             "Benjamin", "Evelyn", "Jacob", "Elizabeth", "Samuel", "Ella", "Nicholas",
-                                             "Grace", "Ethan", "Chloe", "Ryan", "Victoria", "Anthony", "Scarlett", "Jonathan",
-                                             "Madison", "Joshua", "Lily", "William", "Luna", "Logan", "Avery", "Gabriel", "Sofia"};
+    static inline std::vector<std::string> humanFirstNames{"Elana", "Alex", "Avery", "Cameron", "Casey", "Jordan",
+                                                           "Morgan", "Riley", "Taylor", "Jamie", "Reese", "Quinn",
+                                                           "Skylar", "Charlie", "Finley", "Elliot", "Logan", "Parker",
+                                                           "Dakota", "Rowan", "Hayden"};
     static inline std::vector<std::string> elfFirstNames{"Thalorin", "Elara", "Aerendil", "Galadriel", "Aranor", "Elowen", "Thranduil",
                                       "Elenion", "Lúthien", "Finrod", "Aelar", "Celeborn", "Amara", "Legolas", "Evanya",
                                       "Caladrel", "Miriel", "Aragorn", "Elladan", "Arwen", "Thalion", "Elrond", "Aranel",
