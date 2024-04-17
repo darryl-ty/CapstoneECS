@@ -260,7 +260,7 @@ struct CharacterSystem{
                 case 6:
                     oss << getCharacterName(entityManager, entity) << ", the " << getCharacterGender(entity) << " "
                         << getCharacterRace(entityManager, entity) << " became the blade-keeper of an ancient weapon!"
-                        << (getCharacterGender(entity) == "male" ? " He" : " She") << " will defend it with their life!" << std::endl;
+                        << (getCharacterGender(entity) == "male" ? " He" : " She") << " will defend it with " << (getCharacterGender(entity) == "male" ? "his" : "her") << " life!" << std::endl;
                     std::cout << oss.str();
                     worldHistoryFile << oss.str() << std::endl;
 
