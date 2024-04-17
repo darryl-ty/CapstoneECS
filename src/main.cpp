@@ -2,6 +2,10 @@
 #include <cmath>
 #include <thread>
 #include <filesystem>
+#include <QApplication>
+#include <QTableWidget>
+#include <QHeaderView>
+#include <QMainWindow>
 #include "entitymanager.h"
 #include "componentmanager.h"
 #include "systems.h"
