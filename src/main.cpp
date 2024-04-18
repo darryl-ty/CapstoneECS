@@ -7,6 +7,9 @@
 #include <QHeaderView>
 #include <QMainWindow>
 #include <QMessageBox>
+#include <QFileDialog>
+#include <QDialogButtonBox>
+#include <QDir>
 #include "entitymanager.h"
 #include "componentmanager.h"
 #include "systems.h"
@@ -208,6 +211,52 @@ int main(int argc, char *argv[]) {
     QObject::connect(&startScreen, &StartScreen::createWorldClicked, [&]() {
         // Show the world creation dialog when "Create World" is clicked
         worldCreationDialog.show();
+    });
+
+    QObject::connect(&startScreen, &StartScreen::loadWorldHistoryClicked, [&](){
+        QString fileName = QFileDialog::getOpenFileName(nullptr, "Select Text File", QDir::currentPath(), "Text Files (*.txt)");
+
+        // Check if a file was selected
+        if (!fileName.isEmpty()) {
+            // Create a new window (QWidget)
+            QWidget *window = new QWidget;
+            window->setAttribute(Qt::WA_DeleteOnClose); // Delete the window when closed
+
+            // Create a layout for the window
+            QVBoxLayout *layout = new QVBoxLayout(window);
+
+            // Create a QTextEdit widget
+            QTextEdit *textEdit = new QTextEdit;
+            textEdit->setReadOnly(true); // Make it read-only so the user can't edit the content
+
+            // Add the QTextEdit widget to the layout
+            layout->addWidget(textEdit);
+
+            // Open the file and read its content
+            QFile file(fileName);
+            if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+                QByteArray buffer = file.readAll();
+                file.close();
+                textEdit->setPlainText(QString(buffer)); // Set the content of the QTextEdit widget
+            } else {
+                QMessageBox::warning(nullptr, "Error", "Failed to open file: " + file.errorString());
+                delete window; // Delete the window if there's an error
+                return 1;
+            }
+
+            // Add a button box with an OK button to close the window
+            QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok);
+            layout->addWidget(buttonBox);
+            QObject::connect(buttonBox, &QDialogButtonBox::accepted, window, &QWidget::close);
+
+            // Set the window title
+            window->setWindowTitle("History Viewer");
+            window->showMaximized();
+
+            // Show the window
+            window->show();
+        }
+
     });
 
     QObject::connect(&startScreen, &StartScreen::quitClicked, [&]() {

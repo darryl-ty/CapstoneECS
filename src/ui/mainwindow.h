@@ -9,6 +9,7 @@
 #include <QStandardItemModel>
 #include <QTableWidgetItem>
 #include <QHeaderView>
+#include <QPushButton>
 #include <QVBoxLayout>
 #include "../world/WorldTile.h"
 #include "../../include/PerlinNoise.hpp"
