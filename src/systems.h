@@ -6,25 +6,31 @@
 #include <mutex>
 #include <random>
 #include <cmath>
+#include <QTextEdit>
 #include "entitymanager.h"
 #include "componentmanager.h"
 
 static int START_YEAR;
 static int YEAR;
+static int WORLD_WIDTH;
+static int WORLD_HEIGHT;
+static int WORLD_SEED;
+static QTextEdit* TEXT_ADDR;
+static QLabel* HEADER_ADDR;
 static std::ofstream worldHistoryFile;
 std::mutex FILE_MUTEX;
 
 struct KingdomSystem{
     static void establishKingdoms(EntityManager* entityManager, ComponentManager* componentManager){
         for (auto& entity : componentManager->getEntities<KingdomComponent>()){
-           std::cout << "Year " << START_YEAR << ": The "
-           << getKingdomAdjective(entityManager, entity) << " "
+            std::ostringstream oss;
+
+           oss << "Year " << START_YEAR << ": The " << getKingdomAdjective(entityManager, entity) << " "
            << getKingdomName(entityManager, entity) << " was established. May the sovereign "
            << getKingdomRulerName(entityManager, entity) << " reign supreme for eons!" << std::endl;
-            worldHistoryFile << "Year " << START_YEAR << ": The "
-                             << getKingdomAdjective(entityManager, entity) << " "
-                             << getKingdomName(entityManager, entity) << " was established. May the sovereign "
-                             << getKingdomRulerName(entityManager, entity) << " reign supreme for eons!" << std::endl;
+           std::cout << oss.str();
+           TEXT_ADDR->append(QString::fromStdString(oss.str()));
+           worldHistoryFile << oss.str() << std::endl;
         }
     }
     static void kingdomProgress(EntityManager* entityManager, ComponentManager* componentManager){
@@ -47,6 +53,7 @@ struct KingdomSystem{
                                                 : "attacking realms to make any significant research progress this year.")
                         << std::endl;
                     std::cout << oss.str();
+                    TEXT_ADDR->append(QString::fromStdString(oss.str()));
                     worldHistoryFile << oss.str() << std::endl;
 
                     continue;
@@ -57,6 +64,7 @@ struct KingdomSystem{
                 << " research initiatives have proven fruitless, leading to the demise of valuable findings. "
                    "They must now reassess their approach and strive to prevent similar losses in the future." << std::endl;
                 std::cout << oss.str();
+                TEXT_ADDR->append(QString::fromStdString(oss.str()));
                 worldHistoryFile << oss.str() << std::endl;
 
                 entityManager->getComponent<KingdomComponent>(entity).kingdomTechLevel-=10;
@@ -66,6 +74,7 @@ struct KingdomSystem{
                     << " research endeavors have yielded no tangible progress, leaving its knowledge base stagnant. "
                        "It's imperative for them to recalibrate their strategies and embark on a more fruitful path forward." << std::endl;
                 std::cout << oss.str();
+                TEXT_ADDR->append(QString::fromStdString(oss.str()));
                 worldHistoryFile << oss.str() << std::endl;
 
             } else if (researchChange < 9){
@@ -73,6 +82,7 @@ struct KingdomSystem{
                     << " made considerable progress in their research efforts this year. With optimism and dedication, "
                        "they look forward to leveraging these accomplishments as a springboard for even greater achievements ahead." << std::endl;
                 std::cout << oss.str();
+                TEXT_ADDR->append(QString::fromStdString(oss.str()));
                 worldHistoryFile << oss.str() << std::endl;
 
                 entityManager->getComponent<KingdomComponent>(entity).kingdomTechLevel+=2;
@@ -81,6 +91,7 @@ struct KingdomSystem{
                     << " announces a monumental breakthrough in research, particularly in areas with direct military implications. "
                        "This remarkable advancement underscores their commitment to innovation and reinforces their strategic prowess in safeguarding their realm." << std::endl;
                 std::cout << oss.str();
+                TEXT_ADDR->append(QString::fromStdString(oss.str()));
                 worldHistoryFile << oss.str() << std::endl;
 
                 entityManager->getComponent<KingdomComponent>(entity).kingdomTechLevel+=10;
@@ -114,6 +125,7 @@ struct KingdomSystem{
                         << getKingdomName(entityManager, kingdom) << ". It seems they are trying to promote "
                                                                      "better relations between the two civilizations." << std::endl;
                         std::cout << oss.str();
+                        TEXT_ADDR->append(QString::fromStdString(oss.str()));
                         worldHistoryFile << oss.str() << std::endl;
 
                         entityManager->getComponent<KingdomComponent>(entity).kingdomRelationships.at(kingdom) += 1;
@@ -126,6 +138,7 @@ struct KingdomSystem{
                         << getKingdomName(entityManager, kingdom) << ". Let the drums of war sound!" << std::endl;
 
                         std::cout << oss.str();
+                        TEXT_ADDR->append(QString::fromStdString(oss.str()));
                         worldHistoryFile << oss.str() << std::endl;
 
                         entityManager->getComponent<KingdomComponent>(entity).kingdomRelationships.at(kingdom) = -10;
@@ -146,6 +159,7 @@ struct KingdomSystem{
                             << getKingdomRulerName(entityManager, kingdom) << " of "
                             << getKingdomName(entityManager, kingdom) << "." << std::endl;
                         std::cout << oss.str();
+                        TEXT_ADDR->append(QString::fromStdString(oss.str()));
                         worldHistoryFile << oss.str() << std::endl;
 
                         entityManager->getComponent<KingdomComponent>(entity).kingdomRelationships.at(kingdom) += 3;
@@ -157,6 +171,7 @@ struct KingdomSystem{
                             << getKingdomName(entityManager, kingdom) << ". This will be a great chance for the two "
                             "civilizations and their people to get to know one another." << std::endl;
                         std::cout << oss.str();
+                        TEXT_ADDR->append(QString::fromStdString(oss.str()));
                         worldHistoryFile << oss.str() << std::endl;
 
                         entityManager->getComponent<KingdomComponent>(entity).kingdomRelationships.at(kingdom) += 5;
@@ -170,6 +185,7 @@ struct KingdomSystem{
                             << getKingdomRulerName(entityManager, kingdom)
                             << " may they rule better together and til death do they part!" << std::endl;
                         std::cout << oss.str();
+                        TEXT_ADDR->append(QString::fromStdString(oss.str()));
                         worldHistoryFile << oss.str() << std::endl;
 
                         entityManager->getComponent<KingdomComponent>(entity).kingdomRelationships.at(kingdom) += 10;
@@ -212,6 +228,7 @@ struct CharacterSystem{
             if (entityManager->getComponent<CharacterComponent>(entity).name == "Elana"){
                 oss << "Elana took some time to stop and smell the roses." << std::endl;
                 std::cout << oss.str();
+                TEXT_ADDR->append(QString::fromStdString(oss.str()));
                 worldHistoryFile << oss.str() << std::endl;
                 continue;
             }
@@ -221,6 +238,7 @@ struct CharacterSystem{
                     << " " << getCharacterName(entityManager, entity) << " trained in the hinterlands developing"
                     << (getCharacterGender(entity) == "male" ? " his" : " her") << " skills!" << std::endl;
                     std::cout << oss.str();
+                    TEXT_ADDR->append(QString::fromStdString(oss.str()));
                     worldHistoryFile << oss.str() << std::endl;
 
                     entityManager->getComponent<CharacterComponent>(entity).damage += 5;
@@ -230,6 +248,7 @@ struct CharacterSystem{
                     oss << getCharacterName(entityManager, entity) << ", the " << getCharacterGender(entity) << " "
                     << getCharacterRace(entityManager, entity) << " spent their time improving their looks." << std::endl;
                     std::cout << oss.str();
+                    TEXT_ADDR->append(QString::fromStdString(oss.str()));
                     worldHistoryFile << oss.str() << std::endl;
 
                     entityManager->getComponent<CharacterComponent>(entity).health += 1;
@@ -239,6 +258,7 @@ struct CharacterSystem{
                     oss << getCharacterName(entityManager, entity) << ", the " << getCharacterGender(entity) << " "
                         << getCharacterRace(entityManager, entity) << " got lost in the wilds." << std::endl;
                     std::cout << oss.str();
+                    TEXT_ADDR->append(QString::fromStdString(oss.str()));
                     worldHistoryFile << oss.str() << std::endl;
                     break;
                 case 4:
@@ -246,6 +266,7 @@ struct CharacterSystem{
                         << getCharacterName(entityManager, entity) << ". " << (getCharacterGender(entity) == "male" ? " He" : " She")
                         << " will be missed dearly..." << std::endl;
                     std::cout << oss.str();
+                    TEXT_ADDR->append(QString::fromStdString(oss.str()));
                     worldHistoryFile << oss.str() << std::endl;
 
                     entityManager->getComponent<CharacterComponent>(entity).isAlive = false;
@@ -255,6 +276,7 @@ struct CharacterSystem{
                     oss << "The " << getCharacterGender(entity) << " " << getCharacterRace(entityManager, entity)
                         << " " << getCharacterName(entityManager, entity) << " decided to join a cult." << std::endl;
                     std::cout << oss.str();
+                    TEXT_ADDR->append(QString::fromStdString(oss.str()));
                     worldHistoryFile << oss.str() << std::endl;
                     break;
                 case 6:
@@ -262,6 +284,7 @@ struct CharacterSystem{
                         << getCharacterRace(entityManager, entity) << " became the blade-keeper of an ancient weapon!"
                         << (getCharacterGender(entity) == "male" ? " He" : " She") << " will defend it with " << (getCharacterGender(entity) == "male" ? "his" : "her") << " life!" << std::endl;
                     std::cout << oss.str();
+                    TEXT_ADDR->append(QString::fromStdString(oss.str()));
                     worldHistoryFile << oss.str() << std::endl;
 
                     entityManager->getComponent<CharacterComponent>(entity).damage += 100;
@@ -271,6 +294,7 @@ struct CharacterSystem{
                     oss << getCharacterName(entityManager, entity) << ", the " << getCharacterRace(entityManager, entity)
                     << " lost their leg in a arm-wrestling competition. Let's hope they dont fall for that again." << std::endl;
                     std::cout << oss.str();
+                    TEXT_ADDR->append(QString::fromStdString(oss.str()));
                     worldHistoryFile << oss.str() << std::endl;
 
                     entityManager->getComponent<CharacterComponent>(entity).health -= 5;
@@ -280,6 +304,7 @@ struct CharacterSystem{
                     oss << "The " << getCharacterGender(entity) << " " << getCharacterRace(entityManager, entity)
                         << " " << getCharacterName(entityManager, entity) << " pondered the meaning of life." << std::endl;
                     std::cout << oss.str();
+                    TEXT_ADDR->append(QString::fromStdString(oss.str()));
                     worldHistoryFile << oss.str() << std::endl;
                     break;
                 case 9:
@@ -289,12 +314,14 @@ struct CharacterSystem{
                         ? getCharacterName(entityManager, entity-1)
                         : " their spouse") << "."  << std::endl;
                     std::cout << oss.str();
+                    TEXT_ADDR->append(QString::fromStdString(oss.str()));
                     worldHistoryFile << oss.str() << std::endl;
                     break;
                 case 10:
                     oss << getCharacterName(entityManager, entity) << ", the " << getCharacterGender(entity) << " "
                         << getCharacterRace(entityManager, entity) << " discovered the secrets of life and death." << std::endl;
                     std::cout << oss.str();
+                    TEXT_ADDR->append(QString::fromStdString(oss.str()));
                     worldHistoryFile << oss.str() << std::endl;
 
                     entityManager->getComponent<CharacterComponent>(entity).health += 5000;
@@ -364,6 +391,7 @@ struct WarSystem{
                 endWar(entityManager, componentManager, warID);
 
                 std::cout << oss.str();
+                TEXT_ADDR->append(QString::fromStdString(oss.str()));
                 worldHistoryFile << oss.str() << std::endl;
                 continue;
             }
@@ -377,6 +405,7 @@ struct WarSystem{
                 endWar(entityManager, componentManager, warID);
 
                 std::cout << oss.str();
+                TEXT_ADDR->append(QString::fromStdString(oss.str()));
                 worldHistoryFile << oss.str() << std::endl;
                 continue;
             }
@@ -385,6 +414,7 @@ struct WarSystem{
             << getDefenderName(entityManager, warID) << " have been engaged in a bloody war with each other this year. "
                                                         "Only time will tell who prevails!" << std::endl;
             std::cout << oss.str();
+            TEXT_ADDR->append(QString::fromStdString(oss.str()));
             worldHistoryFile << oss.str() << std::endl;
         }
     }

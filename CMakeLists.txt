@@ -12,7 +12,16 @@ find_package(Qt6 COMPONENTS
         Widgets
         REQUIRED)
 
-add_executable(${PROJECT_NAME} src/main.cpp)
+add_executable(${PROJECT_NAME} src/main.cpp
+        src/ui/mainwindow.cpp
+        src/ui/mainwindow.h
+        src/ui/startwindow.cpp
+        src/ui/startwindow.h
+        src/ui/worldcreationwindow.cpp
+        src/ui/worldcreationwindow.h
+        src/world/Tile.cpp
+        src/world/WorldTile.cpp
+)
 
 target_link_libraries(${PROJECT_NAME}
         Qt::Core

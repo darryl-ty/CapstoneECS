@@ -32,7 +32,7 @@ struct KingdomNames{
     "Greenhaven","Starfall","Ashenwood","Sunsetshire","Crestwood","Frostgate","Blackrock","Silverbane","Ravenwood","Stormshield",
     "Goldvale","Darkwater","Windmere","Thornkeep","Moonfall","Shadowridge","Silvershore","Briarwood","Dragonfire","Stonegate",
     "Frostblade","Shadowcliff","Ironclad","Greenwood","Ravenspire","Moonlight","Starbrook","Sunspear","Stormhold","Silverfall","Thornbriar",
-    "Dragoncrest","Goldenreach"};
+    "Dragoncrest","Goldenreach","Islianor"};
 
     static std::string getRandomKingdomName(){
         std::random_device randomDevice;
