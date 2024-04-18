@@ -214,7 +214,7 @@ int main(int argc, char *argv[]) {
     });
 
     QObject::connect(&startScreen, &StartScreen::loadWorldHistoryClicked, [&](){
-        QString fileName = QFileDialog::getOpenFileName(nullptr, "Select Text File", QDir::currentPath(), "Text Files (*.txt)");
+        QString fileName = QFileDialog::getOpenFileName(nullptr, "Select History File", QDir::currentPath(), "Text Files (*.txt)");
 
         // Check if a file was selected
         if (!fileName.isEmpty()) {
